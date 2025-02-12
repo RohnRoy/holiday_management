@@ -100,3 +100,6 @@ The backend provides the following endpoints:
 
 -Tried to use Tailwind(Tried installing multiple times and it throws error with postcss configuration. Created new  projects several times to rectify  issue with postcss, but failed.So standard css is used in this application )
 -Used Calendarific API's free trial with limited resources.So all functions will not work as expected
+
+## Screenshots
+ ![Home page](assets/screenshots/Screenshot (308).png)
