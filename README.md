@@ -30,9 +30,13 @@ A full-stack application for managing and viewing holidays worldwide using the C
    pip install -r requirements.txt
    ```
 
-4. Set up environment variables:
-   - Copy `.env.example` to `.env`
-   - Add your Calendarific API key
+4. Create a .env file in the backend directory and add your configurations:
+
+        CopyCALENDARIFIC_API_KEY=your_api_key_here
+        DJANGO_SECRET_KEY=your_django_secret_key_here
+        DEBUG=True
+        ALLOWED_HOSTS=localhost,127.0.0.1
+
 
 5. Run migrations:
    ```bash
@@ -43,6 +47,10 @@ A full-stack application for managing and viewing holidays worldwide using the C
    ```bash
    python manage.py runserver
    ```
+7. Use Postman for testing the API
+    The following are the API endpoints:
+    `GET /api/holidays/`: List holidays with optional filters
+    `GET /api/holidays/search/`: Search holidays by name
 
 ### Frontend Setup
 
@@ -56,7 +64,11 @@ A full-stack application for managing and viewing holidays worldwide using the C
    npm install
    ```
 
-3. Start the development server:
+3. Create a .env file in the frontend directory:
+
+    REACT_APP_API_URL=http://localhost:8000/api
+
+4.Start the development server:
    ```bash
    npm run dev
    ```
@@ -78,6 +90,13 @@ The backend provides the following endpoints:
 ## Technology Stack
 
 - Backend: Django, Django REST Framework
-- Frontend: React, Vite, Tailwind CSS
+- Frontend: React, Vite,  CSS
 - API: Calendarific
 - Database: SQLite
+
+
+## Additional Notes
+
+
+-Tried to use Tailwind(Tried installing multiple times and it throws error with postcss configuration. Created new  projects several times to rectify  issue with postcss, but failed.So standard css is used in this application )
+-Used Calendarific API's free trial with limited resources.So all functions will not work as expected
