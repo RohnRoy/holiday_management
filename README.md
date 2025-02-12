@@ -104,13 +104,13 @@ The backend provides the following endpoints:
 ## Screenshots
 
 ### Home Page
-![Home page](assets\screenshots\Screenshot1.png)
+![Home page](assets/screenshots/Screenshot1.png)
 
 ### Holiday Details
-![Search page](assets\screenshots\Screenshot2.png)
+![Search page](assets/screenshots/Screenshot2.png)
 
-### Mobile view
-![Details page](assets\screenshots\Screenshot3.png)
+### Mobile View
+![Details page](assets/screenshots/Screenshot3.png)
 
 ### Filter View
-![Filter view](assets\screenshots\Screenshot4.png)
+![Filter view](assets/screenshots/Screenshot4.png)
