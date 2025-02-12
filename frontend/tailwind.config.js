@@ -1,11 +1,20 @@
-module.exports = {
+/** @type {import('tailwindcss').Config} */
+const tailwindConfig = {
   content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {},
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-  ],
-}
+  plugins: [],
+};
+
+const postcssConfig = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};
+
+export { tailwindConfig, postcssConfig };

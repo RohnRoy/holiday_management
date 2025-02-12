@@ -1,18 +1,18 @@
-import React from 'react';
 import { useState } from 'react';
 import SearchForm from './components/SearchForm';
 import HolidayList from './components/HolidayList';
 import HolidayModal from './components/HolidayModal';
+import { Holiday } from './types/holiday';
 
 function App() {
-  const [holidays, setHolidays] = useState([]);
-  const [selectedHoliday, setSelectedHoliday] = useState(null);
+  const [holidays, setHolidays] = useState<Holiday[]>([]);
+  const [selectedHoliday, setSelectedHoliday] = useState<Holiday | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">
           Holiday Management App
         </h1>
@@ -22,7 +22,7 @@ function App() {
           setError={setError}
         />
         {error && (
-          <div className="bg-red-50 text-red-700 p-4 rounded-md mt-4">
+          <div className="bg-red-100 text-red-700 p-4 rounded mt-4">
             {error}
           </div>
         )}
