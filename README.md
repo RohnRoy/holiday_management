@@ -102,4 +102,15 @@ The backend provides the following endpoints:
 -Used Calendarific API's free trial with limited resources.So all functions will not work as expected
 
 ## Screenshots
- ![Home page](assets/screenshots/Screenshot (308).png)
+
+### Home Page
+![Home page](assets\screenshots\Screenshot1.png)
+
+### Holiday Details
+![Search page](assets\screenshots\Screenshot2.png)
+
+### Mobile view
+![Details page](assets\screenshots\Screenshot3.png)
+
+### Filter View
+![Filter view](assets\screenshots\Screenshot4.png)
