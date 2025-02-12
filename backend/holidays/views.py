@@ -16,19 +16,29 @@ class HolidayList(APIView):
             country = request.query_params.get('country', 'US')
             year = int(request.query_params.get('year', '2024'))
             month = request.query_params.get('month')
+            start_date = request.query_params.get('start_date')
+            end_date = request.query_params.get('end_date')
+            holiday_type = request.query_params.get('type')
             
             # Check database cache
             cache_expiry = timezone.now() - timedelta(hours=24)
-            cached_holidays = Holiday.objects.filter(
+            queryset = Holiday.objects.filter(
                 country=country,
                 year=year,
                 cached_at__gte=cache_expiry
             )
             
-            if cached_holidays.exists():
-                if month:
-                    cached_holidays = cached_holidays.filter(date__month=month)
-                serializer = HolidaySerializer(cached_holidays, many=True)
+            if start_date:
+                queryset = queryset.filter(date__gte=start_date)
+            if end_date:
+                queryset = queryset.filter(date__lte=end_date)
+            if holiday_type:
+                queryset = queryset.filter(type__iexact=holiday_type)
+            if month:
+                queryset = queryset.filter(date__month=month)
+            
+            if queryset.exists():
+                serializer = HolidaySerializer(queryset, many=True)
                 return Response({'response': {'holidays': serializer.data}})
                 
             # If not in cache, fetch from API

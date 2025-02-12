@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import axios from 'axios';
+import debounce from 'lodash/debounce';
 import { Holiday } from '../types/holidays';
 import '../styles/components/SearchForm.css';
 
@@ -38,51 +39,71 @@ const MONTHS = [
   { value: '12', label: 'December' }
 ];
 
+const HOLIDAY_TYPES = [
+  { value: '', label: 'All Types' },
+  { value: 'national', label: 'National' },
+  { value: 'religious', label: 'Religious' },
+  { value: 'observance', label: 'Observance' },
+];
+
 const SearchForm: React.FC<SearchFormProps> = ({ setHolidays, setLoading, setError }) => {
   const [country, setCountry] = useState<string>('US');
   const [year, setYear] = useState<string>('2024');
   const [month, setMonth] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [loading, setLoadingState] = useState<boolean>(false);
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
+  const [type, setType] = useState<string>('');
 
-  const handleSearch = async (e: React.FormEvent) => {
+  const debouncedSearch = useMemo(
+    () =>
+      debounce(async (searchParams) => {
+        try {
+          setLoading(true);
+          setError(null);
+          
+          const baseUrl = import.meta.env.VITE_API_URL;
+          if (!baseUrl) throw new Error('API URL not configured');
+
+          const url = searchParams.q ? 
+            `${baseUrl}/holidays/search/` : 
+            `${baseUrl}/holidays/`;
+
+          const response = await axios.get(url, { params: searchParams });
+          
+          if (!response.data.response?.holidays) {
+            throw new Error('Invalid response format');
+          }
+          
+          setHolidays(response.data.response.holidays);
+        } catch (error) {
+          if (axios.isAxiosError(error)) {
+            setError(error.response?.data?.error || error.message);
+          } else {
+            setError(error instanceof Error ? error.message : 'Failed to fetch holidays');
+          }
+          setHolidays([]);
+        } finally {
+          setLoading(false);
+        }
+      }, 300),
+    [setHolidays, setLoading, setError]
+  );
+
+  const handleSearch = useCallback((e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    try {
-      const baseUrl = import.meta.env.VITE_API_URL;
-      if (!baseUrl) {
-        throw new Error('API URL not configured');
-      }
-
-      let url = `${baseUrl}/holidays/`;
-      if (searchQuery) {
-        url = `${baseUrl}/holidays/search/`;
-      }
-
-      const params = {
-        country,
-        year,
-        ...(month && { month }),
-        ...(searchQuery && { q: searchQuery }),
-      };
-
-      const response = await axios.get(url, { params });
-      if (!response.data.response?.holidays) {
-        throw new Error('Invalid response format');
-      }
-      setHolidays(response.data.response.holidays);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        setError(error.response?.data?.error || error.message);
-      } else {
-        setError(error instanceof Error ? error.message : 'Failed to fetch holidays');
-      }
-      setHolidays([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const params = {
+      country,
+      year,
+      ...(month && { month }),
+      ...(searchQuery && { q: searchQuery }),
+      ...(startDate && { start_date: startDate }),
+      ...(endDate && { end_date: endDate }),
+      ...(type && { type }),
+    };
+    debouncedSearch(params);
+  }, [country, year, month, searchQuery, startDate, endDate, type, debouncedSearch]);
 
   return (
     <form onSubmit={handleSearch} className="search-form">
@@ -130,16 +151,43 @@ const SearchForm: React.FC<SearchFormProps> = ({ setHolidays, setLoading, setErr
           placeholder="Search holidays..."
           className="form-input"
         />
+
+        <select
+          value={type}
+          onChange={(e) => setType(e.target.value)}
+          className="form-input"
+        >
+          {HOLIDAY_TYPES.map(({ value, label }) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
+        </select>
+
+        <input
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+          className="form-input"
+        />
+
+        <input
+          type="date"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+          className="form-input"
+        />
       </div>
 
       <button
         type="submit"
         className="search-button"
+        disabled={loading}
       >
-        Search Holidays
+        {loading ? 'Searching...' : 'Search Holidays'}
       </button>
     </form>
   );
 };
 
-export default SearchForm;
+export default React.memo(SearchForm);

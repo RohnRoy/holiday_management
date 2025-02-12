@@ -1,7 +1,8 @@
 .holiday-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1rem;
+  padding: 1rem 0;
 }
 
 .holiday-item {
@@ -11,16 +12,18 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   border: 1px solid #e5e7eb;
-  transition: box-shadow 0.2s;
+  transition: all 0.2s ease;
+  transform: translateY(0);
 }
 
 .holiday-item:hover {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .holiday-name {
   font-size: 1.125rem;
-  font-weight: 600;
+  font-weight: 500;
   color: #111827;
 }
 
@@ -31,7 +34,122 @@
 
 .loading-spinner {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  gap: 1rem;
   padding: 2rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 640px) {
+  .holiday-list {
+    grid-template-columns: 1fr;
+  }
+
+  .holiday-item {
+    padding: 0.75rem;
+  }
+}
+
+.holiday-container {
+  margin: 1rem 0;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+}
+
+.holiday-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.holiday-table th,
+.holiday-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.holiday-table th {
+  background-color: #f9fafb;
+  font-weight: 600;
+  color: #374151;
+}
+
+.holiday-row {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.holiday-row:hover {
+  background-color: #f3f4f6;
+}
+
+.holiday-type {
+  color: #4b5563;
+}
+
+.no-holidays {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.pagination-button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  background-color: white;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-button:hover {
+  background-color: #f3f4f6;
+}
+
+.pagination-button.active {
+  background-color: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+@media (max-width: 640px) {
+  .holiday-table th,
+  .holiday-table td {
+    padding: 0.75rem;
+  }
+
+  .holiday-name {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }

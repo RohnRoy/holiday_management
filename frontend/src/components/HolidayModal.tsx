@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dialog } from '@headlessui/react';
-import { Holiday } from '../types/holiday';
+import { Holiday } from '../types/holidays';
 import '../styles/components/HolidayModal.css';
 
 interface HolidayModalProps {

@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Holiday } from '../types/holidays';
 import '../styles/components/HolidayList.css';
+
+const ITEMS_PER_PAGE = 10;
 
 interface HolidayListProps {
   holidays: Holiday[];
@@ -9,40 +11,73 @@ interface HolidayListProps {
 }
 
 const HolidayList: React.FC<HolidayListProps> = ({ holidays, loading, onHolidayClick }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  
   if (loading) {
     return (
-      <div className="mt-8 text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-        <p className="mt-4 text-gray-600">Loading holidays...</p>
+      <div className="loading-spinner">
+        <div className="spinner"></div>
+        <p>Loading holidays...</p>
       </div>
     );
   }
 
   if (!Array.isArray(holidays) || !holidays.length) {
     return (
-      <div className="mt-8 text-center text-gray-500">
+      <div className="no-holidays">
         No holidays found. Try adjusting your search criteria.
       </div>
     );
   }
 
+  const totalPages = Math.ceil(holidays.length / ITEMS_PER_PAGE);
+  const paginatedHolidays = holidays.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
   return (
-    <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {holidays.map((holiday) => (
-        <div
-          key={`${holiday.name}-${holiday.date.iso}`}
-          className="bg-white rounded shadow p-6 cursor-pointer hover:shadow-lg transition-shadow"
-          onClick={() => onHolidayClick(holiday)}
-        >
-          <h3 className="text-lg font-semibold text-gray-900">
-            {holiday.name}
-          </h3>
-          <p className="text-gray-500">{holiday.date.iso}</p>
-          <p className="text-sm text-gray-600 mt-2">
-            Type: {holiday.type[0]}
-          </p>
+    <div className="holiday-container">
+      <div className="table-responsive">
+        <table className="holiday-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Date</th>
+              <th>Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            {paginatedHolidays.map((holiday) => (
+              <tr
+                key={`${holiday.name}-${holiday.date.iso}`}
+                onClick={() => onHolidayClick(holiday)}
+                className="holiday-row"
+              >
+                <td className="holiday-name">{holiday.name}</td>
+                <td className="holiday-date">{holiday.date.iso}</td>
+                <td className="holiday-type">{holiday.type[0]}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      
+      {totalPages > 1 && (
+        <div className="pagination">
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              className={`pagination-button ${
+                currentPage === page ? 'active' : ''
+              }`}
+            >
+              {page}
+            </button>
+          ))}
         </div>
-      ))}
+      )}
     </div>
   );
 };
