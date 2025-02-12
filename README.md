@@ -7,7 +7,7 @@ A full-stack application for managing and viewing holidays worldwide using the C
 - Search holidays by country and year
 - Filter by month, date range, and holiday type
 - Cached holiday data to reduce API calls
-- Responsive design using Tailwind CSS
+- Responsive design using  CSS
 - Pagination for holiday lists
 
 ## Setup Instructions
@@ -32,7 +32,7 @@ A full-stack application for managing and viewing holidays worldwide using the C
 
 4. Create a .env file in the backend directory and add your configurations:
 
-        CopyCALENDARIFIC_API_KEY=your_api_key_here
+        CALENDARIFIC_API_KEY=your_api_key_here
         DJANGO_SECRET_KEY=your_django_secret_key_here
         DEBUG=True
         ALLOWED_HOSTS=localhost,127.0.0.1
