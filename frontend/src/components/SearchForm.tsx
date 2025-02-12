@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Holiday } from '../types/holidays';
+import '../styles/components/SearchForm.css';
 
 interface SearchFormProps {
   setHolidays: (holidays: Holiday[]) => void;
@@ -49,22 +50,34 @@ const SearchForm: React.FC<SearchFormProps> = ({ setHolidays, setLoading, setErr
     setError(null);
 
     try {
-      let url = `${import.meta.env.VITE_API_URL}/holidays/`;
+      const baseUrl = import.meta.env.VITE_API_URL;
+      if (!baseUrl) {
+        throw new Error('API URL not configured');
+      }
+
+      let url = `${baseUrl}/holidays/`;
       if (searchQuery) {
-        url = `${import.meta.env.VITE_API_URL}/holidays/search/`;
+        url = `${baseUrl}/holidays/search/`;
       }
 
       const params = {
         country,
         year,
-        month,
+        ...(month && { month }),
         ...(searchQuery && { q: searchQuery }),
       };
 
       const response = await axios.get(url, { params });
+      if (!response.data.response?.holidays) {
+        throw new Error('Invalid response format');
+      }
       setHolidays(response.data.response.holidays);
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to fetch holidays');
+      if (axios.isAxiosError(error)) {
+        setError(error.response?.data?.error || error.message);
+      } else {
+        setError(error instanceof Error ? error.message : 'Failed to fetch holidays');
+      }
       setHolidays([]);
     } finally {
       setLoading(false);
@@ -72,12 +85,12 @@ const SearchForm: React.FC<SearchFormProps> = ({ setHolidays, setLoading, setErr
   };
 
   return (
-    <form onSubmit={handleSearch} className="space-y-4">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <form onSubmit={handleSearch} className="search-form">
+      <div className="search-form-grid">
         <select
           value={country}
           onChange={(e) => setCountry(e.target.value)}
-          className="w-full p-2 border rounded"
+          className="form-input"
         >
           {Object.entries(COUNTRIES).map(([code, name]) => (
             <option key={code} value={code}>
@@ -89,7 +102,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ setHolidays, setLoading, setErr
         <select
           value={year}
           onChange={(e) => setYear(e.target.value)}
-          className="w-full p-2 border rounded"
+          className="form-input"
         >
           {[2023, 2024, 2025].map((y) => (
             <option key={y} value={y}>
@@ -101,7 +114,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ setHolidays, setLoading, setErr
         <select
           value={month}
           onChange={(e) => setMonth(e.target.value)}
-          className="w-full p-2 border rounded"
+          className="form-input"
         >
           {MONTHS.map(({ value, label }) => (
             <option key={value} value={value}>
@@ -115,13 +128,13 @@ const SearchForm: React.FC<SearchFormProps> = ({ setHolidays, setLoading, setErr
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search holidays..."
-          className="w-full p-2 border rounded"
+          className="form-input"
         />
       </div>
 
       <button
         type="submit"
-        className="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        className="search-button"
       >
         Search Holidays
       </button>

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Holiday } from '../types/holiday';
+import { Holiday } from '../types/holidays';
+import '../styles/components/HolidayList.css';
 
 interface HolidayListProps {
   holidays: Holiday[];
@@ -12,14 +13,15 @@ const HolidayList: React.FC<HolidayListProps> = ({ holidays, loading, onHolidayC
     return (
       <div className="mt-8 text-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+        <p className="mt-4 text-gray-600">Loading holidays...</p>
       </div>
     );
   }
 
-  if (!holidays.length) {
+  if (!Array.isArray(holidays) || !holidays.length) {
     return (
       <div className="mt-8 text-center text-gray-500">
-        No holidays found. Try adjusting your search.
+        No holidays found. Try adjusting your search criteria.
       </div>
     );
   }

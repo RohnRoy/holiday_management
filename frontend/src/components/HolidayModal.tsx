@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dialog } from '@headlessui/react';
 import { Holiday } from '../types/holiday';
+import '../styles/components/HolidayModal.css';
 
 interface HolidayModalProps {
   holiday: Holiday;
@@ -15,7 +16,7 @@ const HolidayModal: React.FC<HolidayModalProps> = ({ holiday, onClose }) => {
       className="fixed inset-0 z-10 overflow-y-auto"
     >
       <div className="min-h-screen px-4 text-center">
-        <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+        <div className="fixed inset-0 bg-black opacity-30" />
 
         <div className="inline-block w-full max-w-md p-6 my-8 text-left align-middle bg-white shadow-xl rounded-lg">
           <Dialog.Title
