@@ -114,3 +114,8 @@ The backend provides the following endpoints:
 
 ### Filter View
 ![Filter view](assets/screenshots/Screenshot4.png)
+
+### Api Dashboard
+![Filter view](assets/screenshots/image_2025-02-12_203902172.png)
+
+
